@@ -2,6 +2,25 @@
 	<div>
 		<div class="container">
 			<div class="row">
+				<div class="col-md-4">			
+							<el-cascader
+								filterable
+								clearable
+								style="margin-right: 10px; width: 400px"
+								:options="assessment_options"
+								v-model="selected_options"
+								placeholder="Select Assessment Type"
+								@change="set_assessment_type_id">
+							</el-cascader>
+			
+							<el-button 
+								plain
+								type="primary"
+								@click="get_assessment">
+								Create Assessment
+							</el-button>
+				</div>
+
 				<div class="col-md-4">
 					<div>Choose Questionnaire: 
 						<select v-model="selected_questionnaire" @change="selectQuestionnaire">
@@ -50,7 +69,8 @@ export default {
         selected_questionnaire: 'New',
         questionnaires: {},
 
-	    questionnaires_list: [ ]
+	    questionnaires_list: [ ],
+		assessment_options: [ ]
 /*
 		    { title: 'HIV', name: 'abc123'},
 		    { title: 'HepC', name: 'def321'},
@@ -92,6 +112,22 @@ export default {
 	    .then(response => response.json())
 	    .then( function(data) {
 	    		self.questionnaires=data.data.questionnaires || data.data.assessments;
+
+				self.questionnaires_list.splice(0, self.assessment_options.length);
+				self.assessment_options = Object.keys(assessments).map(function(key, index) {
+					return {
+				    value: key,
+					  label: key,
+					  children:  Object.keys(self.questionnaires[key]).map(function(skey, sindex) {return {value: skey, label: self.questionnaires[key][skey].title}}) 
+					  }
+				});
+
+
+
+
+
+
+
 		// NEXT: sort by something, maybe alphabetical, end up with an array [{ name: 'which is the id', title: 'human title'}...]
 				self.questionnaires_list.splice(0, self.questionnaires_list.length);
 				Object.entries(data).forEach(([key, value]) => self.questionnaires_list.push(value));

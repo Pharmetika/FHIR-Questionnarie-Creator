@@ -33,6 +33,11 @@ widgets.ckeditor(SurveyVue);
 widgets.autocomplete(SurveyVue);
 widgets.bootstrapslider(SurveyVue);
 
+
+import Element from 'element-ui'
+ 
+Vue.use(Element)
+
 export default {
   name: 'app',
   components: {
