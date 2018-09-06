@@ -96,6 +96,11 @@ export default {
 				self.questionnaires_list.splice(0, self.questionnaires_list.length);
 				Object.entries(data).forEach(([key, value]) => self.questionnaires_list.push(value));
 				self.questionnaires_list.sort(function(a,b) {return  (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0);}  );
+
+				console.log('self.questionnaires:');				
+				console.log(self.questionnaires);
+				console.log('self.questionnaires_list:');
+				console.log(self.questionnaires_list);
 		});
 
 
