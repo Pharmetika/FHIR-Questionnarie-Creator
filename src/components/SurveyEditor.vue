@@ -74,7 +74,7 @@ export default {
 	    }
   },
   mounted () {
-	  
+	let self=this;	  
     let editorOptions = { showEmbededSurveyTab: true };
     this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions);
 	let url_get=`/api/pharmetika/v5/assessments/types`;
@@ -91,29 +91,29 @@ export default {
 	    })
 	    .then(response => response.json())
 	    .then( function(data) {
-	    		this.questionnaires=data;
+	    		self.questionnaires=data;
 		// NEXT: sort by something, maybe alphabetical, end up with an array [{ name: 'which is the id', title: 'human title'}...]
-				this.questionnaires_list.splice(0, this.questionnaires_list.length);
-				Object.entries(data).forEach(([key, value]) => this.questionnaires_list.push(value));
-				this.questionnaires_list.sort(function(a,b) {return  (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0);}  );
-				})
+				self.questionnaires_list.splice(0, self.questionnaires_list.length);
+				Object.entries(data).forEach(([key, value]) => self.questionnaires_list.push(value));
+				self.questionnaires_list.sort(function(a,b) {return  (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0);}  );
+		});
 
 
     this.editor.saveSurveyFunc = function() {
 	    let questionnaire=JSON.parse(this.text);
-	    if (this.selected_questionnaire == 'New' || ! this.selected_questionnaire) {
-		  this.selected_questionnaire = undefined
+	    if (self.selected_questionnaire == 'New' || ! self.selected_questionnaire) {
+		  self.selected_questionnaire = undefined
 	    }
 	    
 	    let body_string=
 	    JSON.stringify({
 		    							questionnaire: questionnaire,
-		    							description: this.description,
-		    							name: this.selected_questionnaire
+		    							description: self.description,
+		    							name: self.selected_questionnaire
 		    							
 		    							});
       console.log(JSON.stringify(this.text));
-	  let url=`https://training.pharmetika.com/_util/post_data`;
+	  let url=`/_util/post_data`;
  return fetch(url, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "no-cors", // no-cors, cors, *same-origin
