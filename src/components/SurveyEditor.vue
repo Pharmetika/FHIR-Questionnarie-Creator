@@ -91,7 +91,7 @@ export default {
 	    })
 	    .then(response => response.json())
 	    .then( function(data) {
-	    		self.questionnaires=data.data;
+	    		self.questionnaires=data.data.questionnaires || data.data.assessments;
 		// NEXT: sort by something, maybe alphabetical, end up with an array [{ name: 'which is the id', title: 'human title'}...]
 				self.questionnaires_list.splice(0, self.questionnaires_list.length);
 				Object.entries(data).forEach(([key, value]) => self.questionnaires_list.push(value));
