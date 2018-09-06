@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <img id="logo" src="https://pharmetika.com/images/pharmetika_logo_sm_blue.png">
+    <h2 style="display: inline-block;">FHIR Questionnaire Creator</h2>
     <!-- If you want to show survey, uncomment the line below -->
     <!-- <survey :survey="survey"></survey> -->
     <!-- If you want to show survey editor, uncomment the line below -->
@@ -159,4 +160,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
+
+/* additions */
+.svd_commercial_container {display:none;}
+#logo {margin: 0.5em;}
 </style>

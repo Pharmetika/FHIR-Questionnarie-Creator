@@ -34,7 +34,23 @@ export default {
     let editorOptions = { showEmbededSurveyTab: true };
     this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions);
     this.editor.saveSurveyFunc = function() {
+	    
       console.log(JSON.stringify(this.text));
+	  let url=`https://training.pharmetika.com/_util/post_data`;
+ return fetch(url, {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "no-cors", // no-cors, cors, *same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, same-origin, *omit
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            // "Content-Type": "application/x-www-form-urlencoded",
+        },
+        redirect: "follow", // manual, *follow, error
+        referrer: "no-referrer", // no-referrer, *client
+        body: JSON.stringify(this.text), // body data type must match "Content-Type" header
+    })
+    .then(response => response.json()).then( data => console.log(data) );
     };
   }
 }
