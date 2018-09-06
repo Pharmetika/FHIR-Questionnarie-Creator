@@ -100,7 +100,7 @@ export default {
 
 
     this.editor.saveSurveyFunc = function() {
-	    let questionnarie=JSON.parse(this.text);
+	    let questionnaire=JSON.parse(this.text);
 	    if (this.selected_questionnaire == 'New' || ! this.selected_questionnaire) {
 		  this.selected_questionnaire = undefined
 	    }
