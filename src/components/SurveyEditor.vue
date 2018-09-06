@@ -1,5 +1,21 @@
 <template>
-<div id="surveyEditorContainer"></div>
+	<div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<div>Choose Questionnaire: 
+						<select v-model="selected_questionnaire" @change="selectQuestionnaire">
+						  <option v-for="option in questionnaires_list" v-bind:value="option.name">
+						    {{ option.title }}
+						  </option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="surveyEditorContainer"></div>
+	</div>
 </template>
 
 <script>
@@ -24,17 +40,78 @@ widgets.ckeditor(SurveyKo);
 widgets.autocomplete(SurveyKo);
 widgets.bootstrapslider(SurveyKo);
 
+
 export default {
   name: 'survey-editor',
   data () {
     return {
+	    description: '',
+	    editor: undefined,
+        selected_questionnaire: 'New',
+        questionnaires: {},
+
+	    questionnaires_list: [ ]
+/*
+		    { title: 'HIV', name: 'abc123'},
+		    { title: 'HepC', name: 'def321'},
+		    { title: 'green', name: 'ead042'},
+		    { title: 'blue', name: '358daa'}
+*/
     }
   },
+  methods: {
+    selectQuestionnaire: function (event) {
+//	    console.log(this.selected_questionnaire);
+//	    console.log(this.questionnaires[this.selected_questionnaire].items);
+		this.editor.text=JSON.stringify(this.questionnaires[this.selected_questionnaire].items);
+//	    let survey=new SurveyVue.Model(this.questionnaires[this.selected_questionnaire].items)
+/*
+	    console.log(survey);
+	    this.survey=survey;
+	    console.log(this);
+*/
+//	    console.log(this.SurveyEditor);
+	    }
+  },
   mounted () {
+	  
     let editorOptions = { showEmbededSurveyTab: true };
     this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions);
+	let url_get=`/api/pharmetika/v5/assessments/types`;
+	 fetch(url_get, {
+	        method: "GET", // *GET, POST, PUT, DELETE, etc.
+	        mode: "cors", // no-cors, cors, *same-origin
+	        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+	        credentials: "same-origin", // include, same-origin, *omit
+	        headers: {
+	            "Content-Type": "application/json; charset=utf-8",
+	        },
+	        redirect: "follow", // manual, *follow, error
+	        referrer: "no-referrer", // no-referrer, *client
+	    })
+	    .then(response => response.json())
+	    .then( function(data) {
+	    		this.questionnaires=data;
+		// NEXT: sort by something, maybe alphabetical, end up with an array [{ name: 'which is the id', title: 'human title'}...]
+				this.questionnaires_list.splice(0, this.questionnaires_list.length);
+				Object.entries(data).forEach(([key, value]) => this.questionnaires_list.push(value));
+				this.questionnaires_list.sort(function(a,b) {return  (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0);}  );
+				})
+
+
     this.editor.saveSurveyFunc = function() {
+	    let questionnarie=JSON.parse(this.text);
+	    if (this.selected_questionnaire == 'New' || ! this.selected_questionnaire) {
+		  this.selected_questionnaire = undefined
+	    }
 	    
+	    let body_string=
+	    JSON.stringify({
+		    							questionnaire: questionnaire,
+		    							description: this.description,
+		    							name: this.selected_questionnaire
+		    							
+		    							});
       console.log(JSON.stringify(this.text));
 	  let url=`https://training.pharmetika.com/_util/post_data`;
  return fetch(url, {
@@ -48,7 +125,7 @@ export default {
         },
         redirect: "follow", // manual, *follow, error
         referrer: "no-referrer", // no-referrer, *client
-        body: JSON.stringify(this.text), // body data type must match "Content-Type" header
+        body: body_string, // body data type must match "Content-Type" header
     })
     .then(response => response.json()).then( data => console.log(data) );
     };

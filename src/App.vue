@@ -147,9 +147,9 @@ export default {
     };
     var model = new SurveyVue.Model(json)
     return {
-        survey: model
-    }
-  }
+        survey: model,
+        }
+   }
 }
 </script>
 
