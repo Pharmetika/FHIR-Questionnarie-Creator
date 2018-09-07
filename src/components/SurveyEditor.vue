@@ -451,7 +451,7 @@ export default {
     	self.$message({
           message: data.messages[0].message,
           type: data.messages[0].type
-        }); )
+        }) )
     };
   }
 }
