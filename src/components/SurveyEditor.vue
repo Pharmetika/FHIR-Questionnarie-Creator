@@ -425,7 +425,7 @@ export default {
 	    JSON.stringify({
 		    							questionnaire: questionnaire,
 		    							description: self.description,
-		    							name: self.selected_questionnaire || selected_questionnaire_type[1],
+		    							name: self.selected_questionnaire || self.selected_questionnaire_type[1],
 		    							usageContext: self.usageContext
 		    							
 		    							
