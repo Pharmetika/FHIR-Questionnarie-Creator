@@ -115,12 +115,12 @@ export default {
 	    },
 	create_new_choose_use_case() {
 		let self=this;
-        this.$prompt('Choose a category or use case for the new questionnaire', 'Create New Questionnaire Type', {
+        this.$prompt('Choose a category or use case for the new questionnaire', 'Create New Questionnaire: Category', {
           confirmButtonText: 'OK',
           cancelButtonText: 'Cancel',
           type: 'info'
-        }).then(value => {
-	        self.usageContext=value;
+        }).then( result => {
+	        self.usageContext=result.value;
 			self.selected_questionnaire_type.splice(0, self.selected_questionnaire_type.length);
 			self.selected_questionnaire_type.push(value);
 	        this.editor.text=JSON.stringify({
