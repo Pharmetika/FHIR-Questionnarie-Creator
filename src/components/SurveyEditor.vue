@@ -430,8 +430,7 @@ export default {
 		    							
 		    							
 		    							});
-      console.log(JSON.stringify(this.text));
-	  let url=`/_util/post_data`;
+	  let url=`/api/pharmetika/v5/questionnaire`;
 	  //let url=`/assessments/type/${type}`;
 
  return fetch(url, {
@@ -447,7 +446,12 @@ export default {
         referrer: "no-referrer", // no-referrer, *client
         body: body_string, // body data type must match "Content-Type" header
     })
-    .then(response => response.json()).then( data => console.log(data) );
+    .then(response => response.json()).then( data =>         
+    	
+    	self.$message({
+          message: data.messages[0].message,
+          type: data.messages[0].type
+        }); )
     };
   }
 }
