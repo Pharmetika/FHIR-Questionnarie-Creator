@@ -121,10 +121,12 @@ export default {
           type: 'info'
         }).then(value => {
 	        self.usageContext=value;
+			self.selected_questionnaire_type.splice(0, self.selected_questionnaire_type.length);
+			self.selected_questionnaire_type.push(value);
 	        this.editor.text=JSON.stringify({
 																 "title": "NEW",
 																 "pages": [{
-																   "name": "NEW"
+																   "name": "Begin"
 																  }]});
 
           this.$message({
@@ -423,7 +425,9 @@ export default {
 	    JSON.stringify({
 		    							questionnaire: questionnaire,
 		    							description: self.description,
-		    							name: self.selected_questionnaire
+		    							name: self.selected_questionnaire || selected_questionnaire_type[1],
+		    							usageContext: self.usageContext
+		    							
 		    							
 		    							});
       console.log(JSON.stringify(this.text));
