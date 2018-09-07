@@ -122,12 +122,12 @@ export default {
         }).then( result => {
 	        self.usageContext=result.value;
 			self.selected_questionnaire_type.splice(0, self.selected_questionnaire_type.length);
-			self.selected_questionnaire_type.push(value);
-	        this.editor.text=JSON.stringify({
+			self.selected_questionnaire_type.push(result.value);
+	        self.editor.text=JSON.stringify( {
 																 "title": "NEW",
 																 "pages": [{
 																   "name": "Begin"
-																  }]});
+																  }]} );
 
           this.$message({
             type: 'success',
