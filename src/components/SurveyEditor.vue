@@ -63,37 +63,7 @@ export default {
         questionnaires: {},
 
 	    questionnaires_list: [ ],
-		assessment_options:  [{
-          value: 'guide',
-          label: 'Guide',
-          children: [{
-            value: 'disciplines',
-            label: 'Disciplines',
-            children: [{
-              value: 'consistency',
-              label: 'Consistency'
-            }, {
-              value: 'feedback',
-              label: 'Feedback'
-            }, {
-              value: 'efficiency',
-              label: 'Efficiency'
-            }, {
-              value: 'controllability',
-              label: 'Controllability'
-            }]
-          }, {
-            value: 'navigation',
-            label: 'Navigation',
-            children: [{
-              value: 'side nav',
-              label: 'Side Navigation'
-            }, {
-              value: 'top nav',
-              label: 'Top Navigation'
-            }]
-          }]
-         }],
+		assessment_options:  [ ],
          selected_questionnaire_type: []
 /*
 		    { title: 'HIV', name: 'abc123'},
@@ -424,7 +394,6 @@ export default {
 	    })
 	    .then(response => response.json())
 	    .then( function(local_data) {
-	    		self.questionnaires=data.data.questionnaires || data.data.assessments;
 	    		self.questionnaires=local_data.data.questionnaires || local_data.data.assessments;
 				if (1) {
 					self.assessment_options.splice(0, self.assessment_options.length);
