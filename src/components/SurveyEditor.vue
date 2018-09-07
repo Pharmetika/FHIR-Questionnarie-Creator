@@ -2,34 +2,27 @@
 	<div>
 		<div class="container">
 			<div class="row">
-				<div class="col-md-4">			
+				<div class="col-md-11">
+					Modify Existing:
 							<el-cascader
 								filterable
 								clearable
 								style="margin-right: 10px; width: 400px"
 								:options="assessment_options"
-								v-model="selected_options"
-								placeholder="Select Assessment Type"
-								@change="set_assessment_type_id">
+								v-model="selected_questionnaire_type"
+								placeholder="Select Questionnaire Type"
+								@change="set_questionnaire_type_id">
 							</el-cascader>
-			
+							 -&nbsp;OR&nbsp;-  
 							<el-button 
 								plain
 								type="primary"
-								@click="get_assessment">
-								Create Assessment
+								@click="create_new_choose_use_case">
+								Create New Assessment
 							</el-button>
 				</div>
 
-				<div class="col-md-4">
-					<div>Choose Questionnaire: 
-						<select v-model="selected_questionnaire" @change="selectQuestionnaire">
-						  <option v-for="option in questionnaires_list" v-bind:value="option.name">
-						    {{ option.title }}
-						  </option>
-						</select>
-					</div>
-				</div>
+
 			</div>
 		</div>
 
@@ -70,7 +63,38 @@ export default {
         questionnaires: {},
 
 	    questionnaires_list: [ ],
-		assessment_options: [ ]
+		assessment_options:  [{
+          value: 'guide',
+          label: 'Guide',
+          children: [{
+            value: 'disciplines',
+            label: 'Disciplines',
+            children: [{
+              value: 'consistency',
+              label: 'Consistency'
+            }, {
+              value: 'feedback',
+              label: 'Feedback'
+            }, {
+              value: 'efficiency',
+              label: 'Efficiency'
+            }, {
+              value: 'controllability',
+              label: 'Controllability'
+            }]
+          }, {
+            value: 'navigation',
+            label: 'Navigation',
+            children: [{
+              value: 'side nav',
+              label: 'Side Navigation'
+            }, {
+              value: 'top nav',
+              label: 'Top Navigation'
+            }]
+          }]
+         }],
+         selected_questionnaire_type: []
 /*
 		    { title: 'HIV', name: 'abc123'},
 		    { title: 'HepC', name: 'def321'},
@@ -80,6 +104,33 @@ export default {
     }
   },
   methods: {
+	  get_assessment: 		  function (event) {
+		  console.log('this.questionnaires:');
+		  console.log(this.questionnaires);
+		  console.log('this.selected_questionnaire_type:');
+		  console.log(this.selected_questionnaire_type);
+		  this.editor.text=JSON.stringify(this.questionnaires[this.selected_questionnaire].items);
+	  },
+	  set_questionnaire_type_id:
+		  function (event) {
+			  let self=this;
+			  
+		  console.log('this.questionnaires:');
+		  console.log(this.questionnaires);
+		  console.log('this.selected_questionnaire_type:');
+		  console.log(this.selected_questionnaire_type);
+		  self.usageContext=this.selected_questionnaire_type[0];
+			this.editor.text=JSON.stringify(this.questionnaires[this.selected_questionnaire_type[0]][this.selected_questionnaire_type[1]].items);
+			console.log(JSON.stringify(this.questionnaires[this.selected_questionnaire_type[0]][this.selected_questionnaire_type[1]].items));
+		console.log(this.editor.text);
+	//	    let survey=new SurveyVue.Model(this.questionnaires[this.selected_questionnaire].items)
+	/*
+		    console.log(survey);
+		    this.survey=survey;
+		    console.log(this);
+	*/
+	//	    console.log(this.SurveyEditor);
+		    },
     selectQuestionnaire: function (event) {
 //	    console.log(this.selected_questionnaire);
 //	    console.log(this.questionnaires[this.selected_questionnaire].items);
@@ -91,13 +142,282 @@ export default {
 	    console.log(this);
 */
 //	    console.log(this.SurveyEditor);
-	    }
+	    },
+	create_new_choose_use_case() {
+		let self=this;
+        this.$prompt('Choose a category or use case for the new questionnaire', 'Create New Questionnaire Type', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'info'
+        }).then(value => {
+	        self.usageContext=value;
+	        this.editor.text=JSON.stringify({
+																 "title": "NEW",
+																 "pages": [{
+																   "name": "NEW"
+																  }]});
+
+          this.$message({
+            type: 'success',
+            message: 'Begin creating the new questionnaire'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: 'Canceled'
+          });          
+        });
+      }
+
+
+
+
+
+
+
+
+
   },
   mounted () {
 	let self=this;	  
     let editorOptions = { showEmbededSurveyTab: true };
     this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions);
 	let url_get=`/api/pharmetika/v5/assessments/types`;
+	if ('loca') {
+		
+	    		let local_data={
+					   "data" : {
+					      "assessments" : {
+					         "AID Substance Abuse Assessment" : {
+					            "461ef048-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "AID Substance Abuse Assessment",
+					               "date" : "2017-04-28 15:46:20",
+					               "description" : null,
+					               "id" : 178,
+					               "items" : {
+					                  "pages" : [
+					                     {
+					                        "name" : "page1"
+					                     }
+					                  ],
+					                  "title" : "TITLE"
+					               },
+					               "jsond" : 1,
+					               "jsond_err" : "",
+					               "name" : "461ef048-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "CAGE-AID Substance Abuse Assessment",
+					               "type_id" : "461ef048-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "AID Substance Abuse Assessment",
+					               "version" : 0
+					            }
+					         },
+					         "Adherence" : {
+					            "461eeb5e-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "Adherence",
+					               "date" : "2018-09-06 22:43:29",
+					               "description" : null,
+					               "id" : 174,
+					               "items" : {
+					                  "pages" : [
+					                     {
+					                        "name" : "page1"
+					                     }
+					                  ],
+					                  "title" : "174 TOT"
+					               },
+					               "jsond" : 1,
+					               "jsond_err" : "",
+					               "name" : "461eeb5e-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "Morisky Medication Adherence Scale (MMAS-8-Item)",
+					               "type_id" : "461eeb5e-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "Adherence",
+					               "version" : 0
+					            }
+					         },
+ 					         "Anticoagulation" : {
+					            "461e3d76-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "Anticoagulation",
+					               "date" : "2017-02-24 15:03:24",
+					               "description" : null,
+					               "id" : 34,
+					               "items" : {
+					                  "pages" : [
+					                     {
+					                        "name" : "page1"
+					                     }
+					                  ],
+					                  "title" : "TITLE"
+					               },
+					               "jsond" : 1,
+					               "jsond_err" : "",
+					               "name" : "461e3d76-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "Comprehensive Initial Assessment-Anticoagulation",
+					               "type_id" : "461e3d76-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "Anticoagulation",
+					               "version" : 0
+					            },
+					            "461e8e36-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "Anticoagulation",
+					               "date" : "2017-03-02 16:07:53",
+					               "description" : null,
+					               "id" : 102,
+					               "items" : {
+					                  "pages" : [
+					                     {
+					                        "name" : "page1"
+					                     }
+					                  ],
+					                  "title" : "TITLE"
+					               },
+					               "jsond" : 1,
+					               "jsond_err" : "",
+					               "name" : "461e8e36-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "Comprehensive Reassessment-Anticoagulation",
+					               "type_id" : "461e8e36-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "Anticoagulation",
+					               "version" : 0
+					            }
+					         },
+					         "Antiemetics" : {
+					            "461e4223-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "Antiemetics",
+					               "date" : "2017-02-27 10:21:03",
+					               "description" : null,
+					               "id" : 38,
+					               "items" : {
+					                  "pages" : [
+					                     {
+					                        "name" : "page1"
+					                     }
+					                  ],
+					                  "title" : "TITLE"
+					               },
+					               "jsond" : 1,
+					               "jsond_err" : "",
+					               "name" : "461e4223-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "Comprehensive Initial Assessment-Antiemetics",
+					               "type_id" : "461e4223-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "Antiemetics",
+					               "version" : 0
+					            },
+					            "461e929e-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "Antiemetics",
+					               "date" : "2017-03-02 16:33:39",
+					               "description" : null,
+					               "id" : 106,
+					               "items" : {
+					                  "pages" : [
+					                     {
+					                        "name" : "page1"
+					                     }
+					                  ],
+					                  "title" : "TITLE"
+					               },
+					               "jsond" : 1,
+					               "jsond_err" : "",
+					               "name" : "461e929e-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "Comprehensive Reassessment-Antiemetics",
+					               "type_id" : "461e929e-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "Antiemetics",
+					               "version" : 0
+					            }
+					         },
+					         "Asthma" : {
+					            "461e7f51-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "Asthma",
+					               "date" : "2017-02-27 16:06:51",
+					               "description" : null,
+					               "id" : 90,
+					               "items" : {
+					                  "pages" : [
+					                     {
+					                        "name" : "page1"
+					                     }
+					                  ],
+					                  "title" : "TITLE"
+					               },
+					               "jsond" : 1,
+					               "jsond_err" : "",
+					               "name" : "461e7f51-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "Comprehensive Initial Assessment-Asthma",
+					               "type_id" : "461e7f51-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "Asthma",
+					               "version" : 0
+					            },
+					            "461ebfbb-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "Asthma",
+					               "date" : "2017-03-03 12:42:43",
+					               "description" : null,
+					               "id" : 146,
+					               "items" : {
+					                  "pages" : [
+					                     {
+					                        "name" : "page1"
+					                     }
+					                  ],
+					                  "title" : "TITLE"
+					               },
+					               "jsond" : 1,
+					               "jsond_err" : "",
+					               "name" : "461ebfbb-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "Comprehensive Reassessment-Asthma",
+					               "type_id" : "461ebfbb-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "Asthma",
+					               "version" : 0
+					            }
+					         }
+							 }
+						}
+					};
+	    		
+	    		self.questionnaires=local_data.data.questionnaires || local_data.data.assessments;
+				if (1) {
+					self.assessment_options.splice(0, self.assessment_options.length);
+					self.assessment_options = Object.keys(self.questionnaires).map(function(key, index) {
+						return {
+					    value: key,
+						  label: key,
+						  children:  Object.keys(self.questionnaires[key]).map(function(skey, sindex) {return {value: skey, label: self.questionnaires[key][skey].title}}) 
+						  }
+					});
+				}
+
+
+
+
+
+
+
+		// NEXT: sort by something, maybe alphabetical, end up with an array [{ name: 'which is the id', title: 'human title'}...]
+				self.questionnaires_list.splice(0, self.questionnaires_list.length);
+				Object.entries(local_data).forEach(([key, value]) => self.questionnaires_list.push(value));
+				self.questionnaires_list.sort(function(a,b) {return  (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0);}  );
+		
+	} else {
 	 fetch(url_get, {
 	        method: "GET", // *GET, POST, PUT, DELETE, etc.
 	        mode: "cors", // no-cors, cors, *same-origin
@@ -112,7 +432,112 @@ export default {
 	    .then(response => response.json())
 	    .then( function(data) {
 	    		self.questionnaires=data.data.questionnaires || data.data.assessments;
-
+	    		let local_data={
+					   "data" : {
+					      "assessments" : {
+					         "AID Substance Abuse Assessment" : {
+					            "461ef048-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "AID Substance Abuse Assessment",
+					               "date" : "2017-04-28 15:46:20",
+					               "description" : null,
+					               "id" : 178,
+					               "items_json" : "{\"pages\": [{\"name\": \"page1\"}], \"title\": \"TITLE\"}",
+					               "name" : "461ef048-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "CAGE-AID Substance Abuse Assessment",
+					               "type_id" : "461ef048-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "AID Substance Abuse Assessment",
+					               "version" : 0
+					            }
+					         },
+					         "Adherence" : {
+					            "461eeb5e-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "Adherence",
+					               "date" : "2017-04-01 15:41:09",
+					               "description" : null,
+					               "id" : 174,
+					               "items_json" : "{\"pages\": [{\"name\": \"page1\"}], \"title\": \"TITLE\"}",
+					               "name" : "461eeb5e-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "Morisky Medication Adherence Scale (MMAS-8-Item)",
+					               "type_id" : "461eeb5e-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "Adherence",
+					               "version" : 0
+					            }
+					         },
+					         "Anticoagulation" : {
+					            "461e3d76-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "Anticoagulation",
+					               "date" : "2017-02-24 15:03:24",
+					               "description" : null,
+					               "id" : 34,
+					               "items_json" : "{\"pages\": [{\"name\": \"page1\"}], \"title\": \"TITLE\"}",
+					               "name" : "461e3d76-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "Comprehensive Initial Assessment-Anticoagulation",
+					               "type_id" : "461e3d76-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "Anticoagulation",
+					               "version" : 0
+					            },
+					            "461e8e36-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "Anticoagulation",
+					               "date" : "2017-03-02 16:07:53",
+					               "description" : null,
+					               "id" : 102,
+					               "items_json" : "{\"pages\": [{\"name\": \"page1\"}], \"title\": \"TITLE\"}",
+					               "name" : "461e8e36-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "Comprehensive Reassessment-Anticoagulation",
+					               "type_id" : "461e8e36-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "Anticoagulation",
+					               "version" : 0
+					            }
+					         },
+					         "Antiemetics" : {
+					            "461e4223-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "Antiemetics",
+					               "date" : "2017-02-27 10:21:03",
+					               "description" : null,
+					               "id" : 38,
+					               "items_json" : "{\"pages\": [{\"name\": \"page1\"}], \"title\": \"TITLE\"}",
+					               "name" : "461e4223-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "Comprehensive Initial Assessment-Antiemetics",
+					               "type_id" : "461e4223-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "Antiemetics",
+					               "version" : 0
+					            },
+					            "461e929e-b20e-11e8-af5b-b083fec9ccab" : {
+					               "category" : "Antiemetics",
+					               "date" : "2017-03-02 16:33:39",
+					               "description" : null,
+					               "id" : 106,
+					               "items_json" : "{\"pages\": [{\"name\": \"page1\"}], \"title\": \"TITLE\"}",
+					               "name" : "461e929e-b20e-11e8-af5b-b083fec9ccab",
+					               "realm" : null,
+					               "status" : "active",
+					               "subjectType" : "patient",
+					               "title" : "Comprehensive Reassessment-Antiemetics",
+					               "type_id" : "461e929e-b20e-11e8-af5b-b083fec9ccab",
+					               "usageContext" : "Antiemetics",
+					               "version" : 0
+					            }
+					         }
+					        }
+					    }
+					    };
+	    		
+	    		self.questionnaires=local_data.data.questionnaires || local_data.data.assessments;
 				self.questionnaires_list.splice(0, self.assessment_options.length);
 				self.assessment_options = Object.keys(assessments).map(function(key, index) {
 					return {
@@ -138,6 +563,7 @@ export default {
 				console.log('self.questionnaires_list:');
 				console.log(self.questionnaires_list);
 		});
+		}
 
 
     this.editor.saveSurveyFunc = function() {

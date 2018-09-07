@@ -3,6 +3,10 @@
 import Vue from 'vue'
 import App from './App'
 
+import Element from 'element-ui'
+import 'element-theme-default';
+Vue.use(Element)
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
