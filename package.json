@@ -16,6 +16,8 @@
     "@sinonjs/formatio": "github:sinonjs/formatio",
     "ace-builds": "^1.4.1",
     "bootstrap": "^3.3.7",
+    "element-theme-default": "^1.4.13",
+    "element-ui": "^2.4.6",
     "jquery": "^3.1.1",
     "survey-vue": "^1.0.15",
     "surveyjs-editor": "^1.0.15",
