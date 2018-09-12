@@ -114,14 +114,6 @@ export default {
         });
       }
 
-
-
-
-
-
-
-
-
   },
   mounted () {
 	let self=this;	  
@@ -419,15 +411,20 @@ export default {
         referrer: "no-referrer", // no-referrer, *client
         body: body_string, // body data type must match "Content-Type" header
     })
-    .then(response => response.json()).then( data =>         
+    .then(response => response.json())
+    .then(function(data) {
+		    self.questionnaire_name=data.data.questionnaire_name;
+		  return data;
+		})
+    .then( data =>         
     	
     	self.$message({
           message: data.messages[0].message,
           type: data.messages[0].type
-        }) )
-        .then( data => self.questionnaire_name=data.data.questionnaire_name )
-    };
-  }
+        })
+    );
+  };
+    }
 }
 </script>
 
