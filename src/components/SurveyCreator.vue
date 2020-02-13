@@ -34,25 +34,33 @@
 import * as SurveyCreator from "survey-creator";
 import "survey-creator/survey-creator.css";
 
-import * as SurveyKo from "survey-knockout";
+
+
+// import SurveyCreator from './components/SurveyCreator'
+import * as SurveyVue from 'survey-vue'
+import 'bootstrap/dist/css/bootstrap.css';
+
 import * as widgets from "surveyjs-widgets";
 import { init as customWidget } from "../customwidget";
 
+var Survey = SurveyVue.Survey
+Survey.cssType = "bootstrap";
+
 import "inputmask/dist/inputmask/phone-codes/phone.js";
 
-widgets.icheck(SurveyKo);
-widgets.select2(SurveyKo);
-widgets.inputmask(SurveyKo);
-widgets.jquerybarrating(SurveyKo);
-widgets.jqueryuidatepicker(SurveyKo);
-widgets.nouislider(SurveyKo);
-widgets.select2tagbox(SurveyKo);
-widgets.signaturepad(SurveyKo);
-widgets.sortablejs(SurveyKo);
-widgets.ckeditor(SurveyKo);
-widgets.autocomplete(SurveyKo);
-widgets.bootstrapslider(SurveyKo);
-customWidget(SurveyKo);
+widgets.icheck(SurveyVue);
+widgets.select2(SurveyVue);
+widgets.inputmask(SurveyVue);
+widgets.jquerybarrating(SurveyVue);
+widgets.jqueryuidatepicker(SurveyVue);
+widgets.nouislider(SurveyVue);
+widgets.select2tagbox(SurveyVue);
+widgets.signaturepad(SurveyVue);
+widgets.sortablejs(SurveyVue);
+widgets.ckeditor(SurveyVue);
+widgets.autocomplete(SurveyVue);
+widgets.bootstrapslider(SurveyVue);
+customWidget(SurveyVue);
 
 
 export default {
@@ -60,7 +68,7 @@ export default {
   data () {
     return {
 	    description: '',
-	    editor: undefined,
+	    surveyCreator: undefined,
         selected_questionnaire: 'New',
         questionnaires: {},
 		questionnaire_name: undefined,
@@ -86,7 +94,7 @@ export default {
 		  console.log(this.selected_questionnaire_type);
 		  self.usageContext=this.selected_questionnaire_type[0];
 		  self.questionnaire_name=this.selected_questionnaire_type[1];
-		  this.editor.text=JSON.stringify(this.questionnaires[this.selected_questionnaire_type[0]][this.selected_questionnaire_type[1]].items);
+		  this.surveyCreator.text=JSON.stringify(this.questionnaires[this.selected_questionnaire_type[0]][this.selected_questionnaire_type[1]].items);
 		    },
 	create_new_choose_use_case() {
 		let self=this;
@@ -98,7 +106,7 @@ export default {
 	        self.usageContext=result.value;
 			self.selected_questionnaire_type.splice(0, self.selected_questionnaire_type.length);
 			self.selected_questionnaire_type.push(result.value);
-	        self.editor.text=JSON.stringify( {
+	        self.surveyCreator.text=JSON.stringify( {
 																 "title": "NEW",
 																 "pages": [{
 																   "name": "Begin"
@@ -120,7 +128,7 @@ export default {
   mounted () {
 	let self=this;	  
     let editorOptions = { showEmbededSurveyTab: true };
-    // this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions);
+
     this.surveyCreator = new SurveyCreator.SurveyCreator(
 	  "surveyCreatorContainer", editorOptions
 	);
@@ -385,7 +393,7 @@ export default {
 		}
 
 
-    this.editor.saveSurveyFunc = function() {
+    this.surveyCreator.saveSurveyFunc = function() {
 	    let questionnaire=JSON.parse(this.text);
 	    if (self.selected_questionnaire == 'New' || ! self.selected_questionnaire) {
 		  self.selected_questionnaire = undefined
