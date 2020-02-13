@@ -63,7 +63,7 @@ export default {
 	    editor: undefined,
         selected_questionnaire: 'New',
         questionnaires: {},
-
+		questionnaire_name: undefined,
 	    questionnaires_list: [ ],
 		assessment_options:  [ ],
          selected_questionnaire_type: []
@@ -76,13 +76,6 @@ export default {
     }
   },
   methods: {
-	  get_assessment: 		  function (event) {
-		  console.log('this.questionnaires:');
-		  console.log(this.questionnaires);
-		  console.log('this.selected_questionnaire_type:');
-		  console.log(this.selected_questionnaire_type);
-		  this.editor.text=JSON.stringify(this.questionnaires[this.selected_questionnaire].items);
-	  },
 	  set_questionnaire_type_id:
 		  function (event) {
 			  let self=this;
@@ -92,29 +85,9 @@ export default {
 		  console.log('this.selected_questionnaire_type:');
 		  console.log(this.selected_questionnaire_type);
 		  self.usageContext=this.selected_questionnaire_type[0];
-			this.editor.text=JSON.stringify(this.questionnaires[this.selected_questionnaire_type[0]][this.selected_questionnaire_type[1]].items);
-			console.log(JSON.stringify(this.questionnaires[this.selected_questionnaire_type[0]][this.selected_questionnaire_type[1]].items));
-		console.log(this.editor.text);
-	//	    let survey=new SurveyVue.Model(this.questionnaires[this.selected_questionnaire].items)
-	/*
-		    console.log(survey);
-		    this.survey=survey;
-		    console.log(this);
-	*/
-	//	    console.log(this.SurveyEditor);
+		  self.questionnaire_name=this.selected_questionnaire_type[1];
+		  this.editor.text=JSON.stringify(this.questionnaires[this.selected_questionnaire_type[0]][this.selected_questionnaire_type[1]].items);
 		    },
-    selectQuestionnaire: function (event) {
-//	    console.log(this.selected_questionnaire);
-//	    console.log(this.questionnaires[this.selected_questionnaire].items);
-		this.editor.text=JSON.stringify(this.questionnaires[this.selected_questionnaire].items);
-//	    let survey=new SurveyVue.Model(this.questionnaires[this.selected_questionnaire].items)
-/*
-	    console.log(survey);
-	    this.survey=survey;
-	    console.log(this);
-*/
-//	    console.log(this.SurveyEditor);
-	    },
 	create_new_choose_use_case() {
 		let self=this;
         this.$prompt('Choose a category or use case for the new questionnaire', 'Create New Questionnaire: Category', {
@@ -142,14 +115,6 @@ export default {
           });          
         });
       }
-
-
-
-
-
-
-
-
 
   },
   mounted () {
@@ -430,7 +395,7 @@ export default {
 	    JSON.stringify({
 		    							questionnaire: questionnaire,
 		    							description: self.description,
-		    							name: self.selected_questionnaire || self.selected_questionnaire_type[1],
+		    							name: self.questionnaire_name || self.selected_questionnaire_type[1],
 		    							usageContext: self.usageContext
 		    							
 		    							
@@ -451,31 +416,21 @@ export default {
         referrer: "no-referrer", // no-referrer, *client
         body: body_string, // body data type must match "Content-Type" header
     })
-    .then(response => response.json()).then( data =>         
+    .then(response => response.json())
+    .then(function(data) {
+		    self.questionnaire_name=data.data.questionnaire_name;
+		  return data;
+		})
+    .then( data =>         
     	
     	self.$message({
           message: data.messages[0].message,
           type: data.messages[0].type
-        }) )
-
-
-//   name: "survey-creator",
-//   data() {
-//     return {};
-//   },
-//   mounted() {
-//     let options = { showEmbededSurveyTab: true };
-//     this.surveyCreator = new SurveyCreator.SurveyCreator(
-//       "surveyCreatorContainer",
-//       options
-//     );
-//     this.surveyCreator.saveSurveyFunc = function() {
-//       console.log(JSON.stringify(this.text));
-
-
-    };
-  }
-};
+        })
+    );
+  };
+    }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
