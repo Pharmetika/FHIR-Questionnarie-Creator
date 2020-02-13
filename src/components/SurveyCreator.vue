@@ -26,16 +26,17 @@
 			</div>
 		</div>
 
-		<div id="surveyEditorContainer"></div>
+		<div id="surveyCreatorContainer"></div>
 	</div>
 </template>
 
 <script>
-import * as SurveyEditor from 'surveyjs-editor'
-import 'surveyjs-editor/surveyeditor.css';
+import * as SurveyCreator from "survey-creator";
+import "survey-creator/survey-creator.css";
 
 import * as SurveyKo from "survey-knockout";
 import * as widgets from "surveyjs-widgets";
+import { init as customWidget } from "../customwidget";
 
 import "inputmask/dist/inputmask/phone-codes/phone.js";
 
@@ -51,10 +52,11 @@ widgets.sortablejs(SurveyKo);
 widgets.ckeditor(SurveyKo);
 widgets.autocomplete(SurveyKo);
 widgets.bootstrapslider(SurveyKo);
+customWidget(SurveyKo);
 
 
 export default {
-  name: 'survey-editor',
+  name: 'survey-creator',
   data () {
     return {
 	    description: '',
@@ -153,7 +155,10 @@ export default {
   mounted () {
 	let self=this;	  
     let editorOptions = { showEmbededSurveyTab: true };
-    this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions);
+    // this.editor = new SurveyEditor.SurveyEditor('surveyEditorContainer', editorOptions);
+    this.surveyCreator = new SurveyCreator.SurveyCreator(
+	  "surveyCreatorContainer", editorOptions
+	);
 	let url_get=`/api/pharmetika/v5/assessments/types`;
 	if (0 && 'local') {
 		
@@ -452,9 +457,25 @@ export default {
           message: data.messages[0].message,
           type: data.messages[0].type
         }) )
+
+
+//   name: "survey-creator",
+//   data() {
+//     return {};
+//   },
+//   mounted() {
+//     let options = { showEmbededSurveyTab: true };
+//     this.surveyCreator = new SurveyCreator.SurveyCreator(
+//       "surveyCreatorContainer",
+//       options
+//     );
+//     this.surveyCreator.saveSurveyFunc = function() {
+//       console.log(JSON.stringify(this.text));
+
+
     };
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
